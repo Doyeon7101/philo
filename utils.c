@@ -5,7 +5,7 @@ void ft_printerror(char *msg)
     exit(EXIT_FAILURE);
 }
 
-int	ft_atoi(const char *str)
+void ft_atoi(int *dst, const char *str)
 {
 	long	r;
 	int		i;
@@ -27,5 +27,25 @@ int	ft_atoi(const char *str)
 		r += *str - 48;
 		str++;
 	}
-	return (r * i);
+	*dst = r * i;
+	return ;
+}
+
+void	*ft_calloc(size_t cnt, size_t size)
+{
+	void	*ret;
+	int		n;
+	void	*ptr;
+
+	ret = (void *)malloc(size * cnt);
+	n = cnt * size;
+	ptr = ret;
+	if (!ret)
+		return (NULL);
+	while (n-- > 0)
+	{
+		*(char *)ptr = 0;
+		++ptr;
+	}
+	return (ret);
 }

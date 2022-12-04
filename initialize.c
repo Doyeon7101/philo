@@ -1,35 +1,63 @@
 #include "philo.h"
-t_arg *set_argv(char *argv)
+//id, l, r, eat_cnt, status
+void set_philo(t_philo *philo, t_data *data)
 {
-    t_arg *args;
+    int i;
+    int philo_num;
 
-    args = (t_arg *)malloc(sizeof(t_philo));
-    if (!args)
-        ft_printerror("malloc failed");
-    args->num_of_philo = ft_atoi(*++argv);
-    args->time_to_die = ft_atoi(*++argv);
-    args->time_to_eat = ft_atoi(*++argv);
-    args->time_to_sleep = ft_atoi(*++argv);
-    if (*++argv)
-        args->must_eat_num = ft_atoi(*argv);
-    return(args);
+    i = 0;
+    philo_num = data->num_of_philo;
+    while (i < philo_num)
+    {
+        philo[i].id = i;
+        philo[i].l = (i + philo_num - 1) % philo_num;
+        philo[i].r = (i + 1) % philo_num;
+        philo[i].eat_cnt = 0;
+        philo[i++].state = THINKING;
+    }
+    return ;
+}
+bool init_forks(t_data *data)
+{
+    int i;
+    data->forks = calloc(data->num_of_philo, sizeof(pthread_mutex_t));
+    if (!data->forks)
+        return(false);
+    i = 0;
+    while (i < data->num_of_philo)
+    {
+        if (!pthread_mutex_init(&data->forks[i++], NULL));
+            return(false);
+    }
+    return(true);
+
 }
 
-t_philo *initialize(t_arg *args)
+bool    set_argv(char **argv, t_data *data)
+{
+    ft_atoi(&data->num_of_philo, *++argv);
+    ft_atoi(&data->time_to_die, *++argv);
+    ft_atoi(&data->time_to_eat, *++argv);
+    ft_atoi(&data->time_to_sleep, *++argv);
+    if (!*++argv)
+        data->must_eat_num = -1;
+    else
+        ft_atoi(&data->must_eat_num, *argv);
+    if (!init_forks(data))
+        return (false);
+    return ;
+}
+
+void    initialize(t_data *data, t_philo *philo, char **argv)
 {
     t_philo *philos;
     int i;
 
-    args = set_argv(args);
-    philos = (t_philo *)malloc(sizeof(t_philo) * args->num_of_philo);
+    if (!set_argv(argv, data));
+        ft_printerror("initialization failed");
+    philos = calloc(data->num_of_philo, sizeof(t_philo));
     if (!philos)
-        ft_printerror("malloc failed");
-    i = -1;
-    while (++i < args->num_of_philo)
-    {
-        if (pthread_create(&(philos[i].philo_t), NULL, func, ) < 0)
-            ft_printerror("Thread create error");
-    }
-
-
+        ft_printerror("calloc failed");
+    set_philo(philo, data);
+    return ;
 }
