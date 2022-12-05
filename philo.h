@@ -24,6 +24,7 @@ typedef struct s_data
     int             time_to_sleep;
     int             must_eat_num;
     pthread_mutex_t *forks;
+    pthread_mutex_t *print;
 }   t_data;
 
 typedef struct s_philo
@@ -34,6 +35,7 @@ typedef struct s_philo
     int         r;
     int         eat_cnt;
     int         remain_time;
+    t_data      *data;
     t_status    state;
 } t_philo;
 
@@ -44,5 +46,7 @@ void ft_atoi(int *dst, const char *str);
 
 //init
 void initialize(t_data *data, t_philo *philo, char **argv);
+
+void routine(void *arg);
 
 #endif

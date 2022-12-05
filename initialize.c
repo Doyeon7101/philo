@@ -13,13 +13,18 @@ void set_philo(t_philo *philo, t_data *data)
         philo[i].l = (i + philo_num - 1) % philo_num;
         philo[i].r = (i + 1) % philo_num;
         philo[i].eat_cnt = 0;
-        philo[i++].state = THINKING;
+        philo[i].data = data;
+        philo[i].state = THINKING;
+        if (!pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]))
+            ft_printerror("failed to create thread");
     }
     return ;
 }
-bool init_forks(t_data *data)
+
+bool init_mutex(t_data *data)
 {
     int i;
+
     data->forks = calloc(data->num_of_philo, sizeof(pthread_mutex_t));
     if (!data->forks)
         return(false);
@@ -29,8 +34,9 @@ bool init_forks(t_data *data)
         if (!pthread_mutex_init(&data->forks[i++], NULL));
             return(false);
     }
+    if (!pthread_mutex_init(&data->print, NULL) || !pthread_mutex_init(&data->, NULL))
+        return(false);
     return(true);
-
 }
 
 bool    set_argv(char **argv, t_data *data)
@@ -43,7 +49,7 @@ bool    set_argv(char **argv, t_data *data)
         data->must_eat_num = -1;
     else
         ft_atoi(&data->must_eat_num, *argv);
-    if (!init_forks(data))
+    if (!init_mutex(data))
         return (false);
     return ;
 }
