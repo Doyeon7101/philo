@@ -9,11 +9,23 @@
 #include <pthread.h>
 #include <stdbool.h>
 
+# define EPSILON	10
+# define MILLI		1000
+
+typedef enum e_vaild
+{
+    INVAILD,
+    VAILD
+} t_vaild;
+
 typedef enum e_status
 {
+    PICKUP,
     EATING,
+    PUTDOWN,
     SLEEPING,
-    THINKING
+    THINKING,
+    DIED
 }   t_status;
 
 typedef struct s_data
@@ -23,8 +35,10 @@ typedef struct s_data
     int             time_to_eat;
     int             time_to_sleep;
     int             must_eat_num;
+    long long       time;
     pthread_mutex_t *forks;
     pthread_mutex_t *print;
+    pthread_mutex_t *dining;
 }   t_data;
 
 typedef struct s_philo
@@ -35,18 +49,20 @@ typedef struct s_philo
     int         r;
     int         eat_cnt;
     int         remain_time;
+    long long   cur;
     t_data      *data;
-    t_status    state;
 } t_philo;
 
 //utils
-void ft_printerror(char *msg);
 void	*ft_calloc(size_t cnt, size_t size);
-void ft_atoi(int *dst, const char *str);
+bool bool_atoi(int *dst, const char *str);
 
 //init
-void initialize(t_data *data, t_philo *philo, char **argv);
+bool initialize(t_data *data, t_philo *philo, char **argv);
 
 void routine(void *arg);
 
+// print.c
+bool    print_status(t_status status, int id, long long start);
+bool    get_timestamp(long long *ret);
 #endif

@@ -1,11 +1,5 @@
 #include "philo.h"
-void ft_printerror(char *msg)
-{
-    printf("ERROR ! : %s", msg);
-    exit(EXIT_FAILURE);
-}
-
-void ft_atoi(int *dst, const char *str)
+bool bool_atoi(int *dst, const char *str)
 {
 	long	r;
 	int		i;
@@ -27,8 +21,10 @@ void ft_atoi(int *dst, const char *str)
 		r += *str - 48;
 		str++;
 	}
+	if (*str != '\0')
+		return(false);
 	*dst = r * i;
-	return ;
+	return(true) ;
 }
 
 void	*ft_calloc(size_t cnt, size_t size)
