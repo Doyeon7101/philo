@@ -6,28 +6,29 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:37 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 21:26:17 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/09 21:43:55 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-bool bool_atoi(int *dst, const char *str)
+
+bool	bool_atoi(int *dst, const char *str)
 {
 	long	num;
 
 	num = 0;
 	while (*str >= '0' && *str <= '9')
-	{//숫자가 아닌 무언가가 들어오면 fail/
+	{
 		num *= 10;
 		num += *str - 48;
 		str++;
 	}
 	if (*str != '\0')
-		return(false);
+		return (false);
 	if (num > 2147483647)
-		return(false);
+		return (false);
 	*dst = num;
-	return(true) ;
+	return (true);
 }
 
 void	*ft_calloc(size_t cnt, size_t size)
@@ -49,18 +50,18 @@ void	*ft_calloc(size_t cnt, size_t size)
 	return (ret);
 }
 
-bool    wait_interval(int time, long long start_time)
+bool	wait_interval(int time, long long start_time)
 {
-	long long cur;
+	long long	cur;
 
 	if (!get_timestamp(&cur))
-		return(false);
+		return (false);
 	while (cur - start_time <= time)
 	{
 		if (usleep(EPSILON))
-			return(false);
+			return (false);
 		if (!get_timestamp(&cur))
-			return(false);
+			return (false);
 	}
-	return(true);
+	return (true);
 }
