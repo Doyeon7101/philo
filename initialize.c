@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 19:21:30 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/09 21:35:13 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void *routine(void *arg)
     philo = (t_philo *)arg;
     get_timestamp(&philo->cur);
     if(philo->id % 2)
-        wait_interval(10 * EPSILON, philo->cur);
+        wait_interval(30 * EPSILON, philo->cur);
     while(1)
     {
         if (!_eating(philo, philo->data))
@@ -28,6 +28,9 @@ void *routine(void *arg)
             printf("sleep fail\n");
         if (!_thinking(philo, philo->data))
             printf("thinking fail\n");
+        // lock
+        // finish ? end : continue; => t_data 1 or philo 1
+        // unlock
     }
     return (0);
 }
@@ -50,8 +53,8 @@ bool set_philo(t_philo *philo, t_data *data)
         philo[i].eat_cnt = 0;
         philo[i].data = data;
         if (pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]) || \
-            pthread_join(philo[i].philo_t, (void **)&status))
             // pthread_detach(philo[i].philo_t))
+            pthread_join(philo[i].philo_t, (void **)&status))
             return (false);
     }
     return (true);
@@ -61,10 +64,10 @@ bool init_mutex(t_data *data)
 {
     int i;
 
-    data->forks = calloc(data->num_of_philo, sizeof(pthread_mutex_t));
-    data->print= calloc(1, sizeof(pthread_mutex_t));
-    data->dining= calloc(1, sizeof(pthread_mutex_t));
-    if (!data->forks)
+    data->forks = ft_calloc(data->num_of_philo, sizeof(pthread_mutex_t));
+    data->print= ft_calloc(1, sizeof(pthread_mutex_t));
+    data->dining= ft_calloc(1, sizeof(pthread_mutex_t));
+    if (!data->forks || !data->print || !data->dining)
         return(false);
     i = -1;
     while (++i < data->num_of_philo)
@@ -101,7 +104,7 @@ bool init_parse(t_data *data, t_philo *philo, char **argv)
 
     if (!set_argv(argv, data))
         return(false);
-    philos = calloc(data->num_of_philo, sizeof(t_philo));
+    philos = ft_calloc(data->num_of_philo, sizeof(t_philo));
     if (!philos)
         return(false);
     if (!set_philo(philo, data))

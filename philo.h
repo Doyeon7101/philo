@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 18:16:28 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/09 21:16:01 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 
+// EPSILON 10 vs 100 테스트 해보기
 # define EPSILON	10
 # define MILLI		1000
 

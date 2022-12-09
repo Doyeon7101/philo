@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:20 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 18:16:21 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/09 21:17:57 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ bool    _pickup(t_philo *philo, t_data *data)
 
 bool    _putdown(t_philo *philo, t_data *data)
 {
+    // unlock => unlock ok ? fail ?
     if(pthread_mutex_unlock(&data->forks[philo->l]) || \
         pthread_mutex_unlock(&data->forks[philo->r]))
         return(false);
@@ -41,6 +42,7 @@ bool    _sleep(t_philo *philo, t_data *data)
 
 bool    _eating(t_philo *philo, t_data *data)
 {
+    // 화장실 마려워 => 다왔다. => 닫을려고... 하는데... => 아..... 1초만 빨랐다면....
     if (!get_timestamp(&philo->cur) || !_pickup(philo, data))
         return(false);
     print_status(EATING, philo->id, data);

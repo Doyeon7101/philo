@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:13 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 18:17:26 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/09 21:18:33 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 int terminate(t_vaild status, t_data *data, char *msg)
 {
     if (status == INVAILD)
-    {
+    { // mutex free / 철학자 1ㅎ명일때 확인할것
         // mutex들 free
         printf("%s\n", msg);
         return(1);
