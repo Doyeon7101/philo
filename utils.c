@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/09 18:16:37 by dpark             #+#    #+#             */
+/*   Updated: 2022/12/09 18:16:38 by dpark            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 bool bool_atoi(int *dst, const char *str)
 {
@@ -44,4 +56,20 @@ void	*ft_calloc(size_t cnt, size_t size)
 		++ptr;
 	}
 	return (ret);
+}
+
+bool    wait_interval(int time, long long start_time)
+{
+    long long cur;
+
+    if (!get_timestamp(&cur))
+        return(false);
+    while (cur - start_time <= time)
+    {
+        if (usleep(EPSILON))
+            return(false);
+    	if (!get_timestamp(&cur))
+    	    return(false);
+    }
+    return(true);
 }

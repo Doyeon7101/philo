@@ -1,20 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initialize.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
+/*   Updated: 2022/12/09 19:21:30 by dpark            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
-//id, l, r, eat_cnt, status
+
+void *routine(void *arg)
+{
+    t_philo *philo;
+
+    philo = (t_philo *)arg;
+    get_timestamp(&philo->cur);
+    if(philo->id % 2)
+        wait_interval(10 * EPSILON, philo->cur);
+    while(1)
+    {
+        if (!_eating(philo, philo->data))
+            printf("eating fail\n");
+        if (!_sleep(philo, philo->data))
+            printf("sleep fail\n");
+        if (!_thinking(philo, philo->data))
+            printf("thinking fail\n");
+    }
+    return (0);
+}
+
 bool set_philo(t_philo *philo, t_data *data)
 {
     int i;
     int philo_num;
+    int status;
 
-    i = 0;
+    i = -1;
     philo_num = data->num_of_philo;
-    while (i < philo_num)
+    if (!get_timestamp(&data->start_time))
+        return(false);
+    while (++i < philo_num)
     {
         philo[i].id = i;
         philo[i].l = (i + 1) % philo_num;
         philo[i].r = i;
         philo[i].eat_cnt = 0;
         philo[i].data = data;
-        if (!pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]))
+        if (pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]) || \
+            pthread_join(philo[i].philo_t, (void **)&status))
+            // pthread_detach(philo[i].philo_t))
             return (false);
     }
     return (true);
@@ -25,15 +62,17 @@ bool init_mutex(t_data *data)
     int i;
 
     data->forks = calloc(data->num_of_philo, sizeof(pthread_mutex_t));
+    data->print= calloc(1, sizeof(pthread_mutex_t));
+    data->dining= calloc(1, sizeof(pthread_mutex_t));
     if (!data->forks)
         return(false);
-    i = 0;
-    while (i < data->num_of_philo)
+    i = -1;
+    while (++i < data->num_of_philo)
     {
-        if (!pthread_mutex_init(&data->forks[i++], NULL));
-            return(false);
+        if (pthread_mutex_init(&data->forks[i], NULL))
+            return (false);
     }
-    if (!pthread_mutex_init(&data->print, NULL) || !pthread_mutex_init(&data->dining, NULL))
+    if (pthread_mutex_init(data->print, NULL) || pthread_mutex_init(data->dining, NULL))
         return(false);
     return(true);
 }
@@ -52,7 +91,7 @@ bool    set_argv(char **argv, t_data *data)
     }
     if (!init_mutex(data))
         return (false);
-    return ;
+    return (true);
 }
 
 bool init_parse(t_data *data, t_philo *philo, char **argv)
@@ -60,11 +99,12 @@ bool init_parse(t_data *data, t_philo *philo, char **argv)
     t_philo *philos;
     int i;
 
-    if (!set_argv(argv, data));
+    if (!set_argv(argv, data))
         return(false);
     philos = calloc(data->num_of_philo, sizeof(t_philo));
     if (!philos)
         return(false);
-    if (!set_philo(philo, data));
-    return ;
+    if (!set_philo(philo, data))
+        return(false);
+    return (true);
 }
