@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/11 13:59:36 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/11 14:11:11 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ bool set_philo(t_philo *philo, t_data *data)
 {
     int i;
     int philo_num;
-    int status;
 
     i = -1;
     philo_num = data->num_of_philo;
-    if (!get_timestamp(&data->start_time))
+    if (!get_timestamp(&data->start_time) || \
+         pthread_mutex_lock(&data->dining))
         return(false);
     while (++i < philo_num)
     {
@@ -55,8 +55,10 @@ bool set_philo(t_philo *philo, t_data *data)
         if (pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]) || \
             pthread_detach(philo[i].philo_t))
             return (false);
-        sleep(1);
+        // sleep(1);
     }
+    if(pthread_mutex_lock(&data->dining))
+        return(false);
     return (true);
 }
 
@@ -73,7 +75,8 @@ bool init_mutex(t_data *data)
         if (pthread_mutex_init(&data->forks[i], NULL))
             return (false);
     }
-    if (pthread_mutex_init(&data->print, NULL) || pthread_mutex_init(&data->dining, NULL))
+    if (pthread_mutex_init(&data->print, NULL) ||\
+        pthread_mutex_init(&data->dining, NULL))
         return(false);
     return(true);
 }
