@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/11 13:28:53 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/11 15:54:39 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ bool	print_status(t_status status, int id, t_data *data);
 bool	get_timestamp(long long *ret);
 
 // action.c
-bool	_sleep(t_philo *philo, t_data *data);
-bool	_eating(t_philo *philo, t_data *data);
-bool	_thinking(t_philo *philo, t_data *data);
+void	_sleep(t_philo *philo, t_data *data);
+void	_eating(t_philo *philo, t_data *data);
+void	_thinking(t_philo *philo, t_data *data);
 
 #endif

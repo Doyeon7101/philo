@@ -6,33 +6,61 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/11 14:11:11 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/11 15:55:32 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * - philo act 오오류류처리
+ * - monitor 구현
+ * - 200명 넘어가는 숫자.... 어칼거야
+ **/
 void *routine(void *arg)
 {
     t_philo *philo;
 
     philo = (t_philo *)arg;
-    get_timestamp(&philo->cur);
-    if(philo->id % 2)
-        wait_interval(30 * EPSILON, philo->cur);
+    if(get_timestamp(&philo->cur) || philo->id % 2)
+        wait_interval(10 * EPSILON, philo->cur);
     while(1)
     {
-        if (!_eating(philo, philo->data))
-            printf("eating fail\n");
-        if (!_sleep(philo, philo->data))
-            printf("sleep fail\n");
-        if (!_thinking(philo, philo->data))
-            printf("thinking fail\n");
+        _eating(philo, philo->data);
+        _sleep(philo, philo->data);
+        _thinking(philo, philo->data);
         // lock
         // finish ? end : continue; => t_data 1 or philo 1
         // unlock
     }
     return (0);
+}
+
+void    *monitor(void *arg)
+{
+    t_philo *philo;
+    long long cur;
+
+    int i;
+
+    if (!get_timestamp(&cur))
+        pthread_mutex_unlock(&philo->data->dining);
+    wait_interval(philo->data->time_to_die - EPSILON, cur);
+    while (42)
+    {
+        i = -1;
+        while (++i > philo->data->num_of_philo)
+        {
+            if (!get_timestamp(&cur))
+                pthread_mutex_unlock(&philo->data->dining);
+            if (cur - philo[i].cur > philo->data->time_to_die) // dining 시작 시간보다 죽어야 하는 시간이 더 짧을경우 
+            {
+                print_status(DIED, philo[i].id, philo[i].data);
+                pthread_mutex_unlock(&philo->data->dining);
+            }
+        }
+    }
+
 }
 
 bool set_philo(t_philo *philo, t_data *data)
@@ -55,7 +83,6 @@ bool set_philo(t_philo *philo, t_data *data)
         if (pthread_create(&philo[i].philo_t, NULL, routine, &philo[i]) || \
             pthread_detach(philo[i].philo_t))
             return (false);
-        // sleep(1);
     }
     if(pthread_mutex_lock(&data->dining))
         return(false);
