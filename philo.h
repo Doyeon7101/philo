@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/09 21:16:01 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/11 13:28:53 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ typedef enum e_status
 	EATING,
 	SLEEPING,
 	THINKING,
-	DIED
+	DIED,
+	COMPLETE
 }   t_status;
 
 typedef struct s_data
@@ -49,8 +50,8 @@ typedef struct s_data
 	int             must_eat_num;
 	long long       start_time;
 	pthread_mutex_t *forks;
-	pthread_mutex_t *print;
-	pthread_mutex_t *dining;
+	pthread_mutex_t print;
+	pthread_mutex_t dining;
 }   t_data;
 
 typedef struct s_philo
