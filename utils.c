@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:37 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 15:09:31 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 15:27:02 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,24 @@ bool	wait_interval(int time, long long start_time)
 		if (usleep(EPSILON))
 			return (false);
 	}
+	return (true);
+}
+
+bool	init_mutex(t_data *data)
+{
+	int	i;
+
+	data->forks = ft_calloc(data->num_of_philo, sizeof(pthread_mutex_t));
+	if (!data->forks)
+		return (false);
+	i = -1;
+	while (++i < data->num_of_philo)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL))
+			return (false);
+	}
+	if (pthread_mutex_init(&data->print, NULL) || \
+		pthread_mutex_init(&data->dining, NULL))
+		return (false);
 	return (true);
 }

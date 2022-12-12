@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 15:17:48 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 15:26:36 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_philo
 void	*ft_calloc(size_t cnt, size_t size);
 bool	bool_atoi(int *dst, const char *str);
 bool	wait_interval(int time, long long start_time);
+bool	init_mutex(t_data *data);
 
 //init
 bool	init_parse(t_data *data, t_philo *philo, char **argv);
