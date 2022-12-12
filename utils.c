@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:37 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 14:48:34 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 15:09:31 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ bool	wait_interval(int time, long long start_time)
 	while (1)
 	{
 		if (!get_timestamp(&cur))
-			return(false);
+			return (false);
 		if (cur - start_time >= time)
-			return(true);
+			return (true);
 		if (usleep(EPSILON))
-			return(false);
+			return (false);
 	}
-	return(true);
+	return (true);
 }

@@ -6,20 +6,20 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 14:08:30 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 15:17:48 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H 
 
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <pthread.h>
-#include <stdbool.h>
+# include <string.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <pthread.h>
+# include <stdbool.h>
 
 // EPSILON 10 vs 100 테스트 해보기
 # define EPSILON	10
@@ -29,7 +29,7 @@ typedef enum e_vaild
 {
 	INVAILD,
 	VAILD
-} t_vaild;
+}	t_vaild;
 
 typedef enum e_status
 {
@@ -39,34 +39,34 @@ typedef enum e_status
 	THINKING,
 	DIED,
 	COMPLETE
-}   t_status;
+}	t_status;
 
 typedef struct s_data
 {
-	int             num_of_philo;
-	int             time_to_die;
-	int             time_to_eat;
-	int             time_to_sleep;
-	int             must_eat_num;
+	int				num_of_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				must_eat_num;
 	int				eat_cmplt;
-	long long       start_time;
-	pthread_mutex_t *forks;
-	pthread_mutex_t print;
-	pthread_mutex_t dining;
-}   t_data;
+	long long		start_time;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	print;
+	pthread_mutex_t	dining;
+}	t_data;
 
 typedef struct s_philo
 {
-	pthread_t   philo_t;
-	int         id;
-	int         l;
-	int         r;
-	int         eat_cnt;
-	int         remain_time;
-	long long   cur;
+	pthread_t	philo_t;
+	int			id;
+	int			l;
+	int			r;
+	int			eat_cnt;
+	int			remain_time;
+	long long	cur;
 	long long	start;
-	t_data      *data;
-} t_philo;
+	t_data		*data;
+}	t_philo;
 
 //utils.c
 void	*ft_calloc(size_t cnt, size_t size);

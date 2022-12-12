@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 15:04:43 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 15:15:17 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if(!get_timestamp(&philo->cur))
+	if (!get_timestamp(&philo->cur))
 		pthread_mutex_unlock(&philo->data->dining);
 	if (philo->id % 2)
 		wait_interval(10 * EPSILON, philo->cur);
-	while(1)
+	while (1)
 	{
 		_eating(philo, philo->data);
 		_sleep(philo, philo->data);
@@ -30,13 +30,12 @@ void	*routine(void *arg)
 	return (0);
 }
 
-void    *monitor(void *arg)
+void	*monitor(void *arg)
 {
-	t_philo     *philo;
-	long long   cur;
-	long long   time_to_die;
-
-	int i;
+	t_philo		*philo;
+	long long	cur;
+	long long	time_to_die;
+	int			i;
 
 	philo = (t_philo *)arg;
 	time_to_die = philo->data->time_to_die;
@@ -60,17 +59,17 @@ void    *monitor(void *arg)
 	}
 }
 
-bool set_philo(t_philo *philo, t_data *data)
+bool	set_philo(t_philo *philo, t_data *data)
 {
-	int         i;
-	int         philo_num;
-	pthread_t   th_monitor;
+	int			i;
+	int			philo_num;
+	pthread_t	th_monitor;
 
 	i = -1;
 	philo_num = data->num_of_philo;
 	if (!get_timestamp(&data->start_time) || \
-		 pthread_mutex_lock(&data->dining))
-		return(false);
+			pthread_mutex_lock(&data->dining))
+		return (false);
 	while (++i < philo_num)
 	{
 		philo[i].id = i;
@@ -84,42 +83,44 @@ bool set_philo(t_philo *philo, t_data *data)
 	}
 	if (pthread_create(&th_monitor, NULL, monitor, philo) || \
 		pthread_detach(th_monitor))
-			return(false);
-	if(pthread_mutex_lock(&data->dining))
-		return(false);
+		return (false);
+	if (pthread_mutex_lock(&data->dining))
+		return (false);
 	return (true);
 }
 
-bool init_mutex(t_data *data)
+bool	init_mutex(t_data *data)
 {
-	int i;
+	int	i;
 
 	data->forks = ft_calloc(data->num_of_philo, sizeof(pthread_mutex_t));
 	if (!data->forks)
-		return(false);
+		return (false);
 	i = -1;
 	while (++i < data->num_of_philo)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
 			return (false);
 	}
-	if (pthread_mutex_init(&data->print, NULL) ||\
+	if (pthread_mutex_init(&data->print, NULL) || \
 		pthread_mutex_init(&data->dining, NULL))
-		return(false);
-	return(true);
+		return (false);
+	return (true);
 }
 
-bool    set_argv(char **argv, t_data *data)
+bool	set_argv(char **argv, t_data *data)
 {
-	if(!bool_atoi(&data->num_of_philo, *++argv) || !bool_atoi(&data->time_to_die, *++argv) ||\
-	 !bool_atoi(&data->time_to_eat, *++argv) || !bool_atoi(&data->time_to_sleep, *++argv))
-		return(false);
+	if (!bool_atoi(&data->num_of_philo, *++argv) || \
+		!bool_atoi(&data->time_to_die, *++argv) || \
+		!bool_atoi(&data->time_to_eat, *++argv) || \
+		!bool_atoi(&data->time_to_sleep, *++argv))
+		return (false);
 	if (!*++argv)
 		data->must_eat_num = -1;
 	else
 	{
 		if (!bool_atoi(&data->must_eat_num, *argv))
-			return(false);
+			return (false);
 	}
 	if (!init_mutex(data))
 		return (false);
@@ -127,17 +128,17 @@ bool    set_argv(char **argv, t_data *data)
 	return (true);
 }
 
-bool init_parse(t_data *data, t_philo *philo, char **argv)
+bool	init_parse(t_data *data, t_philo *philo, char **argv)
 {
-	t_philo *philos;
-	int i;
+	t_philo	*philos;
+	int		i;
 
 	if (!set_argv(argv, data))
-		return(false);
+		return (false);
 	philos = ft_calloc(data->num_of_philo, sizeof(t_philo));
 	if (!philos)
-		return(false);
+		return (false);
 	if (!set_philo(philo, data))
-		return(false);
+		return (false);
 	return (true);
 }
