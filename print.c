@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:32 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 13:50:18 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 14:20:12 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ bool    print_status(t_status status, int id, t_data  *data)
         printf("%lld %d is thinking\n", intaval, id);
     if (status == DIED)
         printf("%lld %d died\n", intaval, id);
+    if (status == COMPLETE)
+        printf("Dining Philosophers simulation complete!\n");
     if (pthread_mutex_unlock(&data->print))
         return(false);
     return (true);

@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:20 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/11 16:20:03 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 14:23:26 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ void    _eating(t_philo *philo, t_data *data)
         pthread_mutex_unlock(&data->dining);
     _putdown(philo, data);
     (philo->eat_cnt)++;
+    if (philo->eat_cnt >= philo->data->must_eat_num)
+    {
+        (philo->data->eat_cmplt)++;
+        if (philo->data->eat_cmplt >= philo->data->num_of_philo)
+        {
+            print_status(COMPLETE, 0,data);
+            pthread_mutex_unlock(&data->dining);
+        }
+    }
 }
 
 void    _thinking(t_philo *philo, t_data *data)

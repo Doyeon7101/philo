@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 13:54:17 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 14:21:49 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void    *monitor(void *arg)
             {
                 print_status(DIED, philo[i].id, philo[i].data);
                 pthread_mutex_unlock(&philo->data->dining);
-                return(0);
+                return (0);
             }
         }
     }
@@ -123,6 +123,7 @@ bool    set_argv(char **argv, t_data *data)
     }
     if (!init_mutex(data))
         return (false);
+    data->eat_cmplt = 0;
     return (true);
 }
 

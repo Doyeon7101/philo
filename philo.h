@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:27 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 11:21:18 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 14:08:30 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_data
 	int             time_to_eat;
 	int             time_to_sleep;
 	int             must_eat_num;
+	int				eat_cmplt;
 	long long       start_time;
 	pthread_mutex_t *forks;
 	pthread_mutex_t print;
