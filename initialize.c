@@ -6,23 +6,20 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/12 11:26:31 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 13:54:17 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/**
- * - philo act 오오류류처리
- * - monitor 구현
- * - 200명 넘어가는 숫자.... 어칼거야
- **/
 void *routine(void *arg)
 {
     t_philo *philo;
 
     philo = (t_philo *)arg;
-    if(get_timestamp(&philo->cur) || philo->id % 2)
+    if(!get_timestamp(&philo->cur))
+        pthread_mutex_unlock(&philo->data->dining);
+    if (philo->id % 2)
         wait_interval(10 * EPSILON, philo->cur);
     while(1)
     {
@@ -35,26 +32,29 @@ void *routine(void *arg)
 
 void    *monitor(void *arg)
 {
-    t_philo *philo;
-    long long cur;
+    t_philo     *philo;
+    long long   cur;
+    long long   time_to_die;
 
     int i;
 
     philo = (t_philo *)arg;
+    time_to_die = philo->data->time_to_die;
     if (!get_timestamp(&cur))
         pthread_mutex_unlock(&philo->data->dining);
-    wait_interval(philo->data->time_to_die - EPSILON, cur);
+    wait_interval(time_to_die - EPSILON, cur);
     while (42)
     {
         i = -1;
-        while (++i > philo->data->num_of_philo)
+        while (++i < philo->data->num_of_philo)
         {
             if (!get_timestamp(&cur))
                 pthread_mutex_unlock(&philo->data->dining);
-            if (cur - philo[i].cur > philo->data->time_to_die) // dining 시작 시간보다 죽어야 하는 시간이 더 짧을경우 
+            if (cur - philo[i].cur >= time_to_die)
             {
                 print_status(DIED, philo[i].id, philo[i].data);
                 pthread_mutex_unlock(&philo->data->dining);
+                return(0);
             }
         }
     }
