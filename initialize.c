@@ -6,7 +6,7 @@
 /*   By: dpark <dpark@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 18:16:03 by dpark             #+#    #+#             */
-/*   Updated: 2022/12/11 15:55:32 by dpark            ###   ########.fr       */
+/*   Updated: 2022/12/12 11:26:31 by dpark            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@ void *routine(void *arg)
         _eating(philo, philo->data);
         _sleep(philo, philo->data);
         _thinking(philo, philo->data);
-        // lock
-        // finish ? end : continue; => t_data 1 or philo 1
-        // unlock
     }
     return (0);
 }
@@ -43,6 +40,7 @@ void    *monitor(void *arg)
 
     int i;
 
+    philo = (t_philo *)arg;
     if (!get_timestamp(&cur))
         pthread_mutex_unlock(&philo->data->dining);
     wait_interval(philo->data->time_to_die - EPSILON, cur);
@@ -60,13 +58,13 @@ void    *monitor(void *arg)
             }
         }
     }
-
 }
 
 bool set_philo(t_philo *philo, t_data *data)
 {
-    int i;
-    int philo_num;
+    int         i;
+    int         philo_num;
+    pthread_t   th_monitor;
 
     i = -1;
     philo_num = data->num_of_philo;
@@ -84,6 +82,9 @@ bool set_philo(t_philo *philo, t_data *data)
             pthread_detach(philo[i].philo_t))
             return (false);
     }
+    if (pthread_create(&th_monitor, NULL, monitor, philo) || \
+        pthread_detach(th_monitor))
+            return(false);
     if(pthread_mutex_lock(&data->dining))
         return(false);
     return (true);
